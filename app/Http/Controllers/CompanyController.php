@@ -152,12 +152,21 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         try {
-            $company = Company::find($company->id)->with([
-                'keyProductLine',
-                'bizMatch',
-                'preferredPlatform',
-                'schedule'
-            ]);
+            $company = Company::with([
+                'keyProductLine:id,company_id,name',
+                'bizMatch:id,company_id,name',
+                'preferredPlatform:id,company_id,name',
+                'schedule:id,company_id,date,time_start,time_end'
+            ])->find($company->id);
+    
+            // Check if the company exists
+            if (!$company) {
+                return response()->json([
+                    'success' => 'false',
+                    'data' => [],
+                    'message' => 'Company not found'
+                ], 404);
+            }
             return response()->json([
                 'success' => 'true',
                 'data' => $company,

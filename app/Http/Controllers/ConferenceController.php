@@ -49,7 +49,8 @@ class ConferenceController extends Controller
                 'venue' => 'required',
                 'date_start' => 'required',
                 'date_end' => 'required',
-                'time' => 'required',
+                'time_start' => 'required',
+                'time_end' => 'required',
                 'speaker' => 'required',
                 'moderator' => 'required',
                 'sum_table' => 'required',
@@ -125,29 +126,49 @@ class ConferenceController extends Controller
                 'name' => 'required',
                 'description' => 'required',
                 'venue' => 'required',
-                'date_start' => 'required',
-                'date_end' => 'required',
-                'time' => 'required',
+                'date_start' => 'required|date',
+                'date_end' => 'required|date|after_or_equal:date_start',
+                'time_start' => 'required',
+                'time_end' => 'required|after_or_equal:time_start',
                 'speaker' => 'required',
                 'moderator' => 'required',
-                'sum_table' => 'required',
+                'sum_table' => 'required|integer|min:1',
             ]);
-
+    
             $conference->update($request->all());
-
+    
+            $conference->tables()->delete();
+    
+            $start = new \DateTime($request->date_start);
+            $end = new \DateTime($request->date_end);
+            $end->modify('+1 day'); 
+            $interval = new \DateInterval('P1D');
+            $datePeriod = new \DatePeriod($start, $interval, $end);
+    
+            foreach ($datePeriod as $date) {
+                for ($i = 0; $i < $request->sum_table; $i++) {
+                    Table::create([
+                        'conference_id' => $conference->id,
+                        'name_table' => 'Table ' . ($i + 1),
+                        'date' => $date->format('Y-m-d'),
+                    ]);
+                }
+            }
+    
             return response()->json([
-                'success' => 'true',
+                'success' => true,
                 'data' => $conference,
-                'message' => 'Conference updated successfully'
+                'message' => 'Conference updated successfully, and tables updated accordingly.',
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'success' => 'false',
+                'success' => false,
                 'data' => [],
-                'message' => $th->getMessage()
+                'message' => $th->getMessage(),
             ]);
         }
     }
+    
 
     /**
      * Remove the specified resource from storage.

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -39,9 +40,28 @@ class CompanyController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function getCompanyByConference(Request $request)
     {
-        //
+        try {
+            $conference_id = Auth::user()->company->conference_id;
+            $company = Company::with([
+                'keyProductLine:id,company_id,name',
+                'bizMatch:id,company_id,name',
+                'preferredPlatform:id,company_id,name',
+                'schedule:id,company_id,date,time_start,time_end',
+            ])->where('conference_id', $conference_id)->get();
+            return response()->json([
+                'success' => true,
+                'data' => $company,
+                "message" => "Data berhasil ditemukan",
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**

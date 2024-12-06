@@ -21,6 +21,7 @@ Route::get('companys/{company}', [CompanyController::class, 'show'])->middleware
 Route::get('companys', [CompanyController::class, 'index'])->middleware('auth:sanctum');
 Route::put('companys/{company}', [CompanyController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('companys/{company}', [CompanyController::class, 'destroy'])->middleware('auth:sanctum');
+Route::get('companys-by-conference', [CompanyController::class, 'getCompanyByConference'])->middleware('auth:sanctum');
 
 Route::get('tables', [TableController::class, 'index'])->middleware('auth:sanctum');
 

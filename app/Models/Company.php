@@ -33,4 +33,8 @@ class Company extends Model
         return $this->hasMany(PreferredPlatform::class);
     }
     
+    public function schedule()
+    {
+        return $this->hasmany(Schedule::class);
+    }
 }

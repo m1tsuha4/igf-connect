@@ -63,6 +63,10 @@ class CompanyController extends Controller
                 'biz_matchings.*.name' => 'sometimes',
                 'preferred_platforms' => 'sometimes|array',
                 'preferred_platforms.*.name' => 'sometimes',
+                'schedules' => 'sometimes|array',
+                'schedules.*.date' => 'sometimes',
+                'schedules.*.time_start' => 'sometimes',
+                'schedules.*.time_end' => 'sometimes',
             ]);
             DB::beginTransaction();
             $user = User::create([
@@ -112,6 +116,16 @@ class CompanyController extends Controller
                     $company->preferredPlatform()->create([
                         'name' => $prefplat['name'],
                         'company_id' => $company->id
+                    ]);
+                }
+            }
+
+            if (isset($validatedData['schedules'])) {
+                foreach ($validatedData['schedules'] as $schedule) {
+                    $company->schedule()->create([
+                        'date' => $schedule["date"],
+                        'time_start' => $schedule["time_start"],
+                        'time_end' => $schedule["time_end"],
                     ]);
                 }
             }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('venue');
             $table->date('date_start');
             $table->date('date_end');
+            $table->time('time');
             $table->string('speaker');
             $table->string('moderator');
             $table->integer('sum_table');

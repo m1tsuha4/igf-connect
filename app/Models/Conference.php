@@ -12,6 +12,7 @@ class Conference extends Model
         'venue',
         'date_start',
         'date_end',
+        'time',
         'speaker',
         'moderator',
         'sum_table',

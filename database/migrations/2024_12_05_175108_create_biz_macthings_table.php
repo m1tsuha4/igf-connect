@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('biz_macthings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('name');
             $table->timestamps();
         });
     }

@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('matchmakings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id_book')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('company_id_match')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('table_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->time('time_start');
+            $table->time('time_end');
+            $table->integer('approved_company');
+            $table->integer('approved_admin');
             $table->timestamps();
         });
     }

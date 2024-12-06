@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->date('date');
+            $table->time('time_start');
+            $table->time('time_end');
             $table->timestamps();
         });
     }

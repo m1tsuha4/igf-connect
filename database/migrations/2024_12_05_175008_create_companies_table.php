@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('company_name');
+            $table->string('representative_name');
+            $table->string('address');
+            $table->string('company_logo')->nullable();
+            $table->string('about_us');
+            $table->integer('company_type');
+            $table->string('country');
+            $table->string('status');
             $table->timestamps();
         });
     }

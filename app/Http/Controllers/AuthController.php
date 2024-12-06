@@ -37,4 +37,37 @@ class AuthController extends Controller
             ]);
         }
     }
+
+    public function logout(Request $request){
+        try {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json([
+                'success' => 'true',
+                'data' => [],
+                'message' => 'Logout success'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function user(Request $request){
+        try {
+            return response()->json([
+                'success' => 'true',
+                'data' => $request->user(),
+                'message' => 'Data berhasil ditemukan'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 }

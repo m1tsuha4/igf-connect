@@ -152,7 +152,12 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         try {
-            $company = Company::find($company->id);
+            $company = Company::find($company->id)->with([
+                'keyProductLine',
+                'bizMatch',
+                'preferredPlatform',
+                'schedule'
+            ]);
             return response()->json([
                 'success' => 'true',
                 'data' => $company,
@@ -208,7 +213,9 @@ class CompanyController extends Controller
     {
         try {
             $user = User::find($company->user_id);
-            $user->delete();
+            if ($user) {
+                $user->delete();
+            }
             $company->delete();
             return response()->json([
                 'success' => 'true',

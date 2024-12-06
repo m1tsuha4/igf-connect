@@ -15,9 +15,15 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         try {
+            $company = Company::with([
+                'keyProductLine:id,company_id,name',
+                'bizMatch:id,company_id,name',
+                'preferredPlatform:id,company_id,name',
+                'schedule:id,company_id,date,time_start,time_end'
+            ])->get();
             return response()->json([
                 'success' => true,
-                'data' => Company::all(),
+                'data' => $company,
                 "message" => "Data berhasil ditemukan",
             ]);
         } catch (\Throwable $th) {

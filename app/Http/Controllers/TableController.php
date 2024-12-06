@@ -3,16 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Table;
+use App\Models\Conference;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TableController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $conference_id = Auth::user()->company->conference_id;
+            $tables = Table::select('id', 'name_table', 'date')->where('conference_id', $conference_id)->get();
+            return response()->json([
+                'success' => 'true',
+                'data' => $tables,
+                'message' => 'Success'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**

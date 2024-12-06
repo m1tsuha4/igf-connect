@@ -23,4 +23,9 @@ class Conference extends Model
     {
         return $this->hasMany(Table::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

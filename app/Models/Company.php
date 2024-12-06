@@ -16,6 +16,7 @@ class Company extends Model
         'country',
         'status',
         'user_id',
+        'conference_id'
     ];
 
     public function keyProductLine()
@@ -32,9 +33,19 @@ class Company extends Model
     {
         return $this->hasMany(PreferredPlatform::class);
     }
-    
+
     public function schedule()
     {
         return $this->hasmany(Schedule::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function conference()
+    {
+        return $this->hasMany(Conference::class);
     }
 }

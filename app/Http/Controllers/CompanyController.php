@@ -45,6 +45,7 @@ class CompanyController extends Controller
     {
         try {
             $validatedData = $request->validate([
+                'conference_id' => 'required',
                 'email' => 'required',
                 'password' => 'required',
                 'confirm_password' => 'required|same:password',
@@ -82,6 +83,7 @@ class CompanyController extends Controller
             }
     
             $company = Company::create([
+                'conference_id' => $request->conference_id,
                 'user_id' => $user->id,
                 'company_name' => $request->company_name,
                 'representative_name' => $request->representative_name,

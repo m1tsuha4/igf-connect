@@ -7,6 +7,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -16,50 +17,65 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         try {
-            $company = Company::with([
+            $companies = Company::with([
                 'keyProductLine:id,company_id,name',
                 'bizMatch:id,company_id,name',
                 'preferredPlatform:id,company_id,name',
                 'schedule:id,company_id,date,time_start,time_end',
             ])->get();
+
+            // Append full logo URL
+            $companies->transform(function ($company) {
+                $company->company_logo = $company->company_logo 
+                    ? Storage::url($company->company_logo) 
+                    : null;
+                return $company;
+            });
+
             return response()->json([
                 'success' => true,
-                'data' => $company,
+                'data' => $companies,
                 "message" => "Data berhasil ditemukan",
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'success' => 'false',
+                'success' => false,
                 'data' => [],
-                'message' => $th->getMessage()
+                'message' => $th->getMessage(),
             ]);
         }
-        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function getCompanyByConference(Request $request)
     {
         try {
             $conference_id = Auth::user()->company->conference_id;
-            $company = Company::with([
+
+            $companies = Company::with([
                 'keyProductLine:id,company_id,name',
                 'bizMatch:id,company_id,name',
                 'preferredPlatform:id,company_id,name',
                 'schedule:id,company_id,date,time_start,time_end',
             ])->where('conference_id', $conference_id)->get();
+
+            // Append full logo URL
+            $companies->transform(function ($company) {
+                $company->company_logo = $company->company_logo 
+                    ? Storage::url($company->company_logo) 
+                    : null;
+                return $company;
+            });
+
             return response()->json([
                 'success' => true,
-                'data' => $company,
+                'data' => $companies,
                 "message" => "Data berhasil ditemukan",
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'success' => 'false',
+                'success' => false,
                 'data' => [],
-                'message' => $th->getMessage()
+                'message' => $th->getMessage(),
             ]);
         }
     }
@@ -180,35 +196,33 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         try {
-            $company = Company::with([
+            // Load related data
+            $company->load([
                 'keyProductLine:id,company_id,name',
                 'bizMatch:id,company_id,name',
                 'preferredPlatform:id,company_id,name',
                 'schedule:id,company_id,date,time_start,time_end'
-            ])->find($company->id);
-    
-            // Check if the company exists
-            if (!$company) {
-                return response()->json([
-                    'success' => 'false',
-                    'data' => [],
-                    'message' => 'Company not found'
-                ], 404);
-            }
+            ]);
+
+            // Append full URL for the company logo if it exists
+            $company->company_logo = $company->company_logo
+                ? Storage::url($company->company_logo)
+                : null;
+
             return response()->json([
-                'success' => 'true',
+                'success' => true,
                 'data' => $company,
                 'message' => 'Success Get Data'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'success' => 'false',
+                'success' => false,
                 'data' => [],
                 'message' => $th->getMessage()
             ]);
         }
-        
     }
+
 
     /**
      * Show the form for editing the specified resource.

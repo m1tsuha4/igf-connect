@@ -16,7 +16,8 @@ class TableController extends Controller
     {
         try {
             $conference_id = Auth::user()->company->conference_id;
-            $tables = Table::select('id', 'name_table', 'date')->where('conference_id', $conference_id)->get();
+            $date = $request->input('date');
+            $tables = Table::select('id', 'name_table', 'date')->where('date', $date)->where('conference_id', $conference_id)->get();
             return response()->json([
                 'success' => 'true',
                 'data' => $tables,

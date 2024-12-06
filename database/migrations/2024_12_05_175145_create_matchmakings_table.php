@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('table_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->time('time_start');
             $table->time('time_end');
-            $table->integer('approved_company');
-            $table->integer('approved_admin');
+            $table->integer('approved_company')->nullable();
+            $table->integer('approved_admin')->nullable();
             $table->timestamps();
         });
     }

@@ -19,7 +19,7 @@ class CompanyController extends Controller
                 'keyProductLine:id,company_id,name',
                 'bizMatch:id,company_id,name',
                 'preferredPlatform:id,company_id,name',
-                'schedule:id,company_id,date,time_start,time_end'
+                'schedule:id,company_id,date,time_start,time_end',
             ])->get();
             return response()->json([
                 'success' => true,

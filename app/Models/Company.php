@@ -48,4 +48,15 @@ class Company extends Model
     {
         return $this->hasMany(Conference::class);
     }
+
+    public function matchmakingAsCompanyBook()
+    {
+        return $this->hasMany(Matchmaking::class, 'company_id_book');
+    }
+
+    public function matchmakingAsCompanyMatch()
+    {
+        return $this->hasMany(Matchmaking::class, 'company_id_match');
+    }
+
 }

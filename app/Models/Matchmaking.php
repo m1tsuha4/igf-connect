@@ -18,12 +18,12 @@ class Matchmaking extends Model
 
     public function company_book()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id_book', 'id');
     }
-
+    
     public function company_match()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id_match', 'id');
     }
 
     public function table()

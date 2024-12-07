@@ -46,8 +46,8 @@ class Company extends Model
 
     public function conference()
     {
-        return $this->hasMany(Conference::class);
-    }
+        return $this->belongsTo(Conference::class, 'conference_id');
+    }    
 
     public function matchmakingAsCompanyBook()
     {

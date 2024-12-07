@@ -108,8 +108,10 @@ class MatchmakingController extends Controller
             $date = $request->input('date'); // Format: YYYY-MM-DD (sesuai input Anda)
     
             $result = Matchmaking::with([
-                'company_book:id,company_name',
-                'company_match:id,company_name',
+                'company_book:id,company_name,conference_id',
+                'company_book.conference:id,name',
+                'company_match:id,company_name,conference_id',
+                'company_match.conference:id,name',
                 'table:id,name_table,date'
             ])
             ->where('approved_admin', '=', '1')

@@ -35,7 +35,7 @@ class ConferenceController extends Controller
     public function listConference()
     {
         try {
-            $conferences = Conference::select('id','name')->get();
+            $conferences = Conference::all();
             return response()->json([
                 'success' => 'true',
                 'data' => $conferences,

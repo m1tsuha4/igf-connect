@@ -109,9 +109,9 @@ class MatchmakingController extends Controller
     
             $result = Matchmaking::with([
                 'company_book:id,company_name,conference_id',
-                'company_book.conference:id,name',
+                'company_book.conference:id,name,time_start,time_end,sum_table',
                 'company_match:id,company_name,conference_id',
-                'company_match.conference:id,name',
+                'company_match.conference:id,name,time_start,time_end,sum_table',
                 'table:id,name_table,date'
             ])
             ->where('approved_admin', '=', '1')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Company;
+use App\Models\Matchmaking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -204,7 +205,23 @@ class CompanyController extends Controller
                 'schedule:id,company_id,date,time_start,time_end'
             ]);
 
-            // Append full URL for the company logo if it exists
+            // Get all matchmaking data for the current company
+            $matchmaking = Matchmaking::where('company_id_match', $company->id)->get();
+
+            // Iterate through the company's schedules and add the status
+            $company->schedule->transform(function ($schedule) use ($matchmaking) {
+                $status = $matchmaking->contains(function ($match) use ($schedule) {
+                    return $match->table->date === $schedule->date &&
+                        $match->time_start === $schedule->time_start &&
+                        $match->time_end === $schedule->time_end;
+                });
+
+                // Add status to the schedule
+                $schedule->status = $status ? 1 : 0;
+
+                return $schedule;
+            });
+
             $company->company_logo = $company->company_logo
                 ? Storage::url($company->company_logo)
                 : null;
@@ -222,6 +239,7 @@ class CompanyController extends Controller
             ]);
         }
     }
+
 
 
     /**

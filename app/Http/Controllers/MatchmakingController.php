@@ -17,12 +17,12 @@ class MatchmakingController extends Controller
      public function getMatchmakingByCompanyBook() 
      {
         try{
-            $result = Matchmaking::where('company_id_book', '=', Auth::user()->company->id)->with(['company_match:id,company_name','table:id,name_table,date'])->get();
+            $result = Matchmaking::where('company_id_match', '=', Auth::user()->company->id)->with(['company_book:id,company_name','table:id,name_table,date'])->get();
             return response()->json([
                 'success' => 'true',
                 'data' => $result,
                 'message' => 'Success'
-        ]);
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => 'false',
@@ -30,17 +30,18 @@ class MatchmakingController extends Controller
                 'message' => $th->getMessage()
             ]);
         }
+        
      }
 
      public function getMatchmakingByCompanyMatch() 
      {
         try{
-            $result = Matchmaking::where('company_id_match', '=', Auth::user()->company->id)->with(['company_book:id,company_name','table:id,name_table,date'])->get();
+            $result = Matchmaking::where('company_id_book', '=', Auth::user()->company->id)->with(['company_match:id,company_name','table:id,name_table,date'])->get();
             return response()->json([
                 'success' => 'true',
                 'data' => $result,
                 'message' => 'Success'
-            ]);
+        ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => 'false',

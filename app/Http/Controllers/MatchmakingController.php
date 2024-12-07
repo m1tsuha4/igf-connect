@@ -144,9 +144,22 @@ class MatchmakingController extends Controller
     
 
 
-    public function index()
+    public function getMatchmakingByCompanyCalendar($company_id)
     {
-        //
+        try{
+            $result = Matchmaking::where('company_id_book', '=', $company_id)->with(['company_book:id,company_name','table:id,name_table,date'])->get();
+            return response()->json([
+                'success' => 'true',
+                'data' => $result,
+                'message' => 'Success'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**

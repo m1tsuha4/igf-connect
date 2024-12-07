@@ -33,7 +33,7 @@ class AuthController extends Controller
                     'success' => 'false',
                     'data' => [],
                     'message' => 'Login failed'
-                ]);
+                ], 401);
             }
         } catch (\Throwable $th) {
             return response()->json([

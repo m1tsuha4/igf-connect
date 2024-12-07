@@ -32,5 +32,5 @@ Route::get('matchmakings/bycompany-book', [MatchmakingController::class, 'getMat
 Route::get('matchmakings/bycompany-match', [MatchmakingController::class, 'getMatchmakingByCompanyMatch'])->middleware('auth:sanctum');
 Route::get('matchmakings/approved-company', [MatchmakingController::class, 'getApprovedMatchmakingByCompany'])->middleware('auth:sanctum');
 Route::get('matchmakings/company-calendar/{company_id}', [MatchmakingController::class, 'getMatchmakingByCompanyCalendar'])->middleware('auth:sanctum');
-
+Route::delete('matchmakings/{matchmaking}', [MatchmakingController::class, 'destroy'])->middleware('auth:sanctum');
 Route::get('dashboard-meja', [MatchmakingController::class, 'dashboardMeja'])->middleware('auth:sanctum');

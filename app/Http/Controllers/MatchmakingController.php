@@ -83,7 +83,7 @@ class MatchmakingController extends Controller
      public function getApprovedMatchmakingByCompany()
      {
         try {
-            $result = Matchmaking::where('approved_company', '=', 1)->with([
+            $result = Matchmaking::where('approved_company', '=', '1')->with([
                 'company_book:id,company_name',
                 'company_match:id,company_name',
                 'table:id,name_table,date'])
@@ -112,7 +112,7 @@ class MatchmakingController extends Controller
                 'company_match:id,company_name',
                 'table:id,name_table,date'
             ])
-            ->where('approved_admin', '=', 1)
+            ->where('approved_admin', '=', '1')
             ->when($conferenceId, function ($query) use ($conferenceId) {
                 $query->whereHas('company_book', function ($subQuery) use ($conferenceId) {
                     $subQuery->where('conference_id', $conferenceId);
@@ -233,6 +233,19 @@ class MatchmakingController extends Controller
      */
     public function destroy(Matchmaking $matchmaking)
     {
-        //
+        try {
+            $matchmaking->delete();
+            return response()->json([
+                'success' => 'true',
+                'data' => [],
+                'message' => 'Success'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

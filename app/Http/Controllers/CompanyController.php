@@ -18,50 +18,26 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         try {
-            if(Auth::user()->role == 'admin'){
-                $companies = Company::with([
-                    'keyProductLine:id,company_id,name',
-                    'bizMatch:id,company_id,name',
-                    'preferredPlatform:id,company_id,name',
-                    'schedule:id,company_id,date,time_start,time_end',
-                ])->get();
-                    // Append full logo URL
-                $companies->transform(function ($company) {
-                    $company->company_logo = $company->company_logo 
-                        ? Storage::url($company->company_logo) 
-                        : null;
-                    return $company;
-                });
+            $companies = Company::with([
+                'keyProductLine:id,company_id,name',
+                'bizMatch:id,company_id,name',
+                'preferredPlatform:id,company_id,name',
+                'schedule:id,company_id,date,time_start,time_end',
+            ])->get();
 
-                return response()->json([
-                    'success' => true,
-                    'data' => $companies,
-                    "message" => "Data berhasil ditemukan",
-                ]);
-            } else if(Auth::user()->role == 'company'){
-                $company_id = Auth::user()->company->id;
-                $companies = Company::with([
-                    'keyProductLine:id,company_id,name',
-                    'bizMatch:id,company_id,name',
-                    'preferredPlatform:id,company_id,name',
-                    'schedule:id,company_id,date,time_start,time_end',
-                ])->where('id', '!=', $company_id)->get();
+            // Append full logo URL
+            $companies->transform(function ($company) {
+                $company->company_logo = $company->company_logo 
+                    ? Storage::url($company->company_logo) 
+                    : null;
+                return $company;
+            });
 
-                // Append full logo URL
-                $companies->transform(function ($company) {
-                    $company->company_logo = $company->company_logo 
-                        ? Storage::url($company->company_logo) 
-                        : null;
-                    return $company;
-                });
-
-                return response()->json([
-                    'success' => true,
-                    'data' => $companies,
-                    "message" => "Data berhasil ditemukan",
-                ]);
-            }
-            
+            return response()->json([
+                'success' => true,
+                'data' => $companies,
+                "message" => "Data berhasil ditemukan",
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -75,13 +51,14 @@ class CompanyController extends Controller
     {
         try {
             $conference_id = Auth::user()->company->conference_id;
+            $company_id = Auth::user()->company_id;
 
             $companies = Company::with([
                 'keyProductLine:id,company_id,name',
                 'bizMatch:id,company_id,name',
                 'preferredPlatform:id,company_id,name',
                 'schedule:id,company_id,date,time_start,time_end',
-            ])->where('conference_id', $conference_id)->get();
+            ])->where('conference_id', $conference_id)->where('id', '!=', $company_id)->get();
 
             // Append full logo URL
             $companies->transform(function ($company) {

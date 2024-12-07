@@ -51,7 +51,7 @@ class CompanyController extends Controller
     {
         try {
             $conference_id = Auth::user()->company->conference_id;
-            $company_id = Auth::user()->company_id;
+            $company_id = Auth::user()->company->id;
 
             $companies = Company::with([
                 'keyProductLine:id,company_id,name',

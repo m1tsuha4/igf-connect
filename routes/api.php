@@ -16,6 +16,8 @@ Route::get('users', [AuthController::class, 'user'])->middleware('auth:sanctum')
 
 Route::apiResource('conferences', ConferenceController::class)->middleware('auth:sanctum');
 
+Route::get('list-conference', [ConferenceController::class, 'listConference']);
+
 Route::post('companys', [CompanyController::class, 'store']);
 Route::get('companys/{company}', [CompanyController::class, 'show'])->middleware('auth:sanctum');
 Route::get('companys', [CompanyController::class, 'index'])->middleware('auth:sanctum');

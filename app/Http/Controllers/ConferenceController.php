@@ -32,9 +32,22 @@ class ConferenceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function listConference()
     {
-        //
+        try {
+            $conferences = Conference::select('id','name')->get();
+            return response()->json([
+                'success' => 'true',
+                'data' => $conferences,
+                'message' => 'Success'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => 'false',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     /**

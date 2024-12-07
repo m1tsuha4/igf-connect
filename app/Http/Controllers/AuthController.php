@@ -28,6 +28,12 @@ class AuthController extends Controller
                     'data' => $data,
                     'message' => 'Login success'
                 ]);
+            } else {
+                return response()->json([
+                    'success' => 'false',
+                    'data' => [],
+                    'message' => 'Login failed'
+                ]);
             }
         } catch (\Throwable $th) {
             return response()->json([

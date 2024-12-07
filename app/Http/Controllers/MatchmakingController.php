@@ -150,7 +150,7 @@ class MatchmakingController extends Controller
     public function getMatchmakingByCompanyCalendar($company_id)
     {
         try{
-            $result = Matchmaking::where('company_id_book', '=', $company_id)->with(['company_book:id,company_name','table:id,name_table,date'])->get();
+            $result = Matchmaking::where('company_id_book', '=', $company_id)->orWhere('company_id_match', '=', $company_id)->with(['company_book:id,company_name','company_match:id,company_name','table:id,name_table,date'])->get();
             return response()->json([
                 'success' => 'true',
                 'data' => $result,

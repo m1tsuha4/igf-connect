@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Table;
 use App\Models\Conference;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ConferenceController extends Controller
 {
@@ -15,6 +17,10 @@ class ConferenceController extends Controller
     {
         try {
             $conferences = Conference::all();
+            $conferences->transform(function ($conference) {
+                $conference->image = $conference->image ? Storage::url($conference->image) : null;
+                return $conference;
+            });
             return response()->json([
                 'success' => 'true',
                 'data' => $conferences,
@@ -36,6 +42,10 @@ class ConferenceController extends Controller
     {
         try {
             $conferences = Conference::all();
+            $conferences->transform(function ($conference) {
+                $conference->image = $conference->image ? Storage::url($conference->image) : null;
+                return $conference;
+            });
             return response()->json([
                 'success' => 'true',
                 'data' => $conferences,
@@ -59,6 +69,7 @@ class ConferenceController extends Controller
             $request->validate([
                 'name' => 'required',
                 'description' => 'required',
+                'image' => 'required',
                 'venue' => 'required',
                 'date_start' => 'required',
                 'date_end' => 'required',
@@ -69,7 +80,25 @@ class ConferenceController extends Controller
                 'sum_table' => 'required',
             ]);
 
-            $conference = Conference::create($request->all());
+            DB::beginTransaction();
+            $conferenceLogoPath = null;
+
+            if ($request->hasFile('image')) {
+                $conferenceLogoPath = $request->file('image')->store('conference-logos', 'public');
+            }
+            $conference = Conference::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'image' => $conferenceLogoPath,
+                'venue' => $request->venue,
+                'date_start' => $request->date_start,
+                'date_end' => $request->date_end,
+                'time_start' => $request->time_start,
+                'time_end' => $request->time_end,
+                'speaker' => $request->speaker,
+                'moderator' => $request->moderator,
+                'sum_table' => $request->sum_table
+            ]);
             $start = new \DateTime($request->date_start);
             $end = new \DateTime($request->date_end);
             $end->modify('+1 day'); // Include the end date
@@ -85,6 +114,8 @@ class ConferenceController extends Controller
                     ]);
                 }
             }
+
+            DB::commit();
     
             return response()->json([
                 'success' => 'true',
@@ -92,6 +123,7 @@ class ConferenceController extends Controller
                 'message' => 'Conference created successfully'
             ]);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
                 'success' => 'false',
                 'data' => [],
@@ -107,6 +139,7 @@ class ConferenceController extends Controller
     {
         try {
             $conference = Conference::find($conference->id);
+            $conference->image = $conference->image ? Storage::url($conference->image) : null;
             return response()->json([
                 'success' => 'true',
                 'data' => $conference,

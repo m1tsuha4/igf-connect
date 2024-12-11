@@ -9,6 +9,7 @@ class Conference extends Model
     protected $fillable = [
         'name',
         'description',
+        'image',
         'venue',
         'date_start',
         'date_end',
